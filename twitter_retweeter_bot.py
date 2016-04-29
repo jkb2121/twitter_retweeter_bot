@@ -4,6 +4,7 @@ import datetime
 import tweepy
 
 from twitter import Twitter, OAuth, TwitterStream
+from twitter.stream import Timeout, HeartbeatTimeout, Hangup
 
 try:
     import json
@@ -20,6 +21,7 @@ except ImportError:
 l = open("retweetbot.log", "a")
 timestamp = datetime.datetime.now().time()
 datestamp = datetime.datetime.now().date()
+l.write("-----------------------------------------------------------\n\r")
 l.write(str(datestamp) + " " + str(timestamp) + ": Starting Twitter_Retweeter_Bot\n\r")
 l.close()
 
@@ -39,7 +41,7 @@ iterator = twitter_stream.statuses.filter(track="#ctcomedy", language="en")
 
 # Read and parse the tweets we find...
 
-tweet_count = 50
+tweet_count = 51
 for tweet in iterator:
     tweet_count -= 1
 
@@ -47,11 +49,34 @@ for tweet in iterator:
     f = open("retweetbot_debug.log", "a")
     l = open("retweetbot.log", "a")
 
-    # Get the ID of the Tweet and Retweet it!
+    timestamp = datetime.datetime.now().time()
+    datestamp = datetime.datetime.now().date()
+    f.write("-----------------------------------------------------------\n\r")
+
+    # Probably can do something more interesting with these, but I don't
+    # quite know what yet.  So, let's just write them to the log, ignore
+    # it, and then we'll see for next time...
+    tweet_detail = 0
+    if tweet is None:
+        tweet_detail = "'None' reply"
+    elif tweet is Timeout:
+        tweet_detail = "Timeout"
+    elif tweet is HeartbeatTimeout:
+        tweet_detail = "Heartbeat Timeout"
+    elif tweet is Hangup:
+        tweet_detail = "Hangup"
+
+    if tweet_detail:
+        l.write(str(datestamp) + " " + str(timestamp) + "(" + str(tweet_count) +
+                "): Ignoring Case: " + tweet_detail + "\n\r")
+
+        # Maybe the right thing to do here would be to bump tweet_count back up to 51
+        # and then maybe reestablish the twitter_stream and tw_api and restart
+        # the iterator?
+        continue
+
+    # Get the ID of the Tweet and retweet it!
     try:
-        timestamp = datetime.datetime.now().time()
-        datestamp = datetime.datetime.now().date()
-        f.write("-----------------------------------------------------------\n\r")
 
         tweettext = tweet['text']
         tweettext = tweettext.encode('ascii', errors='ignore')
