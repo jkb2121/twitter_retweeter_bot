@@ -44,6 +44,12 @@ def log(entry, line=0):
 log("Starting Threaded Retweeter!", 1)
 
 class TwitterListener:
+    def getStatus(self):
+        return "TwitterListener '" + self.name + "' Tracking: " + self.track
+
+    def getName(self):
+        return self.name
+
     def __init__(self, name, track, twitter_stream, tw_api):
         self.name = name
         self.track = track
@@ -107,13 +113,15 @@ class TwitterListener:
             tweettext = tweettext.encode('ascii', errors='ignore')
 
             if self.in_blacklist(tweet['text']):
+                log("Blacklist mention by " + tweet['user']['screen_name'] + ": " + tweet['text'])
                 continue
 
             if self.in_blacklist(tweet['user']['screen_name']):
+                log("Blacklisted Person (" + tweet['user']['screen_name'] + ") Tweet: " + tweet['text'])
                 continue
 
             log("Identified Tweet " + self.name + " - (" + str(
-                tweet_count) + ") <" + self.track + "> : Retweeting: " + str(
+                tweet_count) + "): Retweeting: " + str(
                 tweet['user']['screen_name']) + ": " + tweettext + str("\n\r"))
 
             try:
@@ -140,15 +148,16 @@ class TwitterListener:
             if tweet_count <= 0:
                 break
 
-
 t1 = TwitterListener("#ctcomedy", "#ctcomedy", twitter_stream, tw_api)
+log("TL1:" + t1.getStatus())
 
-comics = "@apollojackson, @_Beecher_, @FunnyBone, @WichaelMeiss, @ryanbrauth, @comixmohegansun, " + \
-         "@DarrenSechrist, @jokesondrew, @Dannyboy3030, @DanRiceComedy, @Freudmayweather, " + \
-         "@RicenBeanJoker, @pat_oates,@GerriWulle, @ChrisClarke203, @APOLLOJACKSON, @JokerRome, " + \
-         "@KevinFitzComedy, @ghostyfilms"
+comics = "@apollojackson,@_Beecher_,@FunnyBone,@WichaelMeiss,@ryanbrauth,@comixmohegansun," + \
+         "@DarrenSechrist,@jokesondrew,@Dannyboy3030,@DanRiceComedy,@Freudmayweather," + \
+         "@RicenBeanJoker,@pat_oates,@GerriWulle,@ChrisClarke203,@APOLLOJACKSON,@JokerRome," + \
+         "@KevinFitzComedy,@Ghostyfilms"
 
 t2 = TwitterListener("Comics", comics, twitter_stream, tw_api)
+log("TL2:" + t2.getStatus())
 
 ft = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 ft.append("january")
@@ -192,9 +201,12 @@ try:
 
     log("Sleeping with a Join() so the daemons can work!")
     time.sleep(30)
+
+    tc = 0
     for t in threads:
-        log("Joining Thread...")
-        t.join()
+        log("Thread " + str(tc) + " Joining Thread..." + t.getName())
+        tc += 1
+    t.join()
 # time.sleep(300)
 except (KeyboardInterrupt, SystemExit):
     print "Detected Keyboard Interrupt!"
