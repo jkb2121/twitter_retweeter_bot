@@ -32,6 +32,7 @@ tw_api = tweepy.API(auth)
 
 
 def log(entry, line=0):
+    entry = entry.encode('ascii', errors='ignore')
     l = open("retweetbot.log", "a")
     timestamp = datetime.datetime.now().time()
     datestamp = datetime.datetime.now().date()
@@ -113,11 +114,11 @@ class TwitterListener:
             tweettext = tweettext.encode('ascii', errors='ignore')
 
             if self.in_blacklist(tweet['text']):
-                log("Blacklist mention by " + tweet['user']['screen_name'] + ": " + tweet['text'])
+                log("Blacklist mention by " + tweet['user']['screen_name'] + ": " + tweettext)
                 continue
 
             if self.in_blacklist(tweet['user']['screen_name']):
-                log("Blacklisted Person (" + tweet['user']['screen_name'] + ") Tweet: " + tweet['text'])
+                log("Blacklisted Person (" + tweet['user']['screen_name'] + ") Tweet: " + tweettext)
                 continue
 
             log("Identified Tweet " + self.name + " - (" + str(
@@ -128,15 +129,15 @@ class TwitterListener:
                 if len(self.filterarray) > 0:
                     tweeted = 0
                     for entry in self.filterarray:
-                        log("Testing to see if '" + entry + "' is in tweet '" + tweet[
-                            'text'].lower() + "', and if so, retweeting...")
-                        if entry in tweet['text'].lower():
-                            log("Found keyword, retweeting: '" + tweet['text'] + "'")
+                        # log("Testing to see if '" + entry + "' is in tweet '" + tweet[
+                        # 'text'].lower() + "', and if so, retweeting...")
+                        if entry in tweettext.lower():
+                            log("Found keyword, retweeting: '" + tweettext + "'")
                             self.tw_api.retweet(tweet['id'])
                             tweeted = 1
                             break;
                     if tweeted == 0:
-                        log("Ignored tweet '" + tweet['text'] + "'")
+                        log("Ignored tweet '" + tweettext + "'")
                 else:
                     log("Unrestricted Tweet " + self.name + " - (" + str(
                         tweet_count) + ") <" + self.track + "> : Retweeting: " + str(
