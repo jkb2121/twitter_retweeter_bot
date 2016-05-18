@@ -4,3 +4,5 @@ settings.py
 nohup.out
 .idea/*
 .idea
+.c
+*.yaml
