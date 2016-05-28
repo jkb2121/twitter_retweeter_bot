@@ -59,6 +59,16 @@ for bl in yml['blacklist']:
     # print "Blacklist: " + yml['blacklist'][bl]
     blacklist.append(str(yml['blacklist'][bl]))
 
+l = open("retweetbot.log", "a")
+l.write("\n\n-----------------------------------------------------------\n\r")
+l.write("Starting Threaded Retweeter")
+
+for bl in blacklist:
+    # print "Blacklist: " + bl
+    l.write("Blacklist: " + bl)
+
+l.close()
+
 threads = []
 
 try:
