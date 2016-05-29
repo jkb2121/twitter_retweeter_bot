@@ -111,6 +111,12 @@ class TwitterStreamListener:
                 tweet_count) + "): Retweeting: " + str(
                 tweet['user']['screen_name']) + ": " + tweettext + str("\n\r"))
 
+            if tweet['retweeted_status']:
+                log("Retweet (" + str(tweet_count) + "):by: Screen Name: " +
+                    tweet['retweeted_status']['user']['screen_name'])
+                log("Retweet (" + str(tweet_count) + "):by: Name: " +
+                    tweet['retweeted_status']['user']['name'])
+
             try:
                 if len(self.filterarray) > 0:
                     tweeted = 0

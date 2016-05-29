@@ -51,9 +51,10 @@ class TweepyWatcher:
 
     def work(self):
         try:
+            runcount = 0
             while True:
                 for target in self.watchlist:
-                    log("Target: " + str(target))
+                    log("Target [" + str(runcount) + "]: " + str(target))
 
                     try:
                         t = 0
@@ -61,26 +62,29 @@ class TweepyWatcher:
                             tweettext = status.text
                             tweettext = tweettext.encode('ascii', errors='ignore')
 
-                            log("Status (" + str(t) + "): " + str(tweettext))
+                            # log("Status (" + str(t) + "): " + str(tweettext))
 
                             if self.in_blacklist(tweettext):
-                                log("Blacklist mention by " + str(target) + ": " + tweettext)
+                                log("Blacklist [" + str(runcount) + "] mention by " + str(target) + ": " + tweettext)
                                 continue
 
                             for filter in self.filterlist:
                                 if filter in status.text.lower():
-                                    log("Retweet!")
+                                    log("Retweeting [" + str(runcount) + "] (" + str(t) + "): " + str(tweettext))
 
                                     if self.live:
                                         self.api.retweet(status.id)
                             t += 1
                             if t > self.counter:
                                 break
-                    except tweepy.error.TweepError:
-                        log("Caught Error with Target " + str(target) + "... Continuing.")
+                    except tweepy.error.TweepError, e:
+                        log("Caught Error[" + str(runcount) + "] with Target " + str(target) + "... Continuing.")
+                        log("The specific error is: " + str(e))
+
                         continue
 
                 time.sleep(self.watchdelay)
+                runcount += 1
 
         except (KeyboardInterrupt, SystemExit):
             print "Detected Keyboard Interrupt!"
