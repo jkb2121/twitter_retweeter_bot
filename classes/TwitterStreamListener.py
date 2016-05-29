@@ -62,19 +62,21 @@ class TwitterStreamListener:
         # Pull data from Twitter matching the query below:
         try:
             iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en")
-        except TwitterHTTPError:
+        except TwitterHTTPError, hx:
             log("Caught TwitterHTTPError for " + self.name)
             log("Trying again...")
             print("Caught TwitterHTTPError for " + self.name)
             print("Trying again...")
+            log("The specific error is: " + str(hx))
 
             try:
                 iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en")
-            except TwitterHTTPError:
+            except TwitterHTTPError, hx:
                 log("Failed a second time for " + self.name)
                 log("Killing of Thread...  :(")
                 print("Failed a second time for " + self.name)
                 print("Killing of Thread...  :(")
+                log("The specific error is: " + str(hx))
 
         # Read and parse the tweets we find...
 
@@ -137,8 +139,8 @@ class TwitterStreamListener:
                         tweet['user']['screen_name']) + ": " + tweettext + str("\n\r"))
                     if self.live:
                         self.tw_api.retweet(tweet['id'])
-            except tweepy.error.TweepError:
+            except tweepy.error.TweepError, e:
                 log("TweepError:  Just ignore it and move on with life...")
-
+                log("The specific error is: " + str(e))
             if tweet_count <= 0:
                 break
