@@ -60,8 +60,9 @@ class TwitterStreamListener:
     def work(self):
 
         # Pull data from Twitter matching the query below:
+        # Reference: https://dev.twitter.com/streaming/overview/request-parameters
         try:
-            iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en")
+            iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en", replies="all")
         except TwitterHTTPError, hx:
             log("Caught TwitterHTTPError for " + self.name)
             log("Trying again...")
@@ -70,7 +71,7 @@ class TwitterStreamListener:
             log("The specific error is: " + str(hx))
 
             try:
-                iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en")
+                iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en", replies="all")
             except TwitterHTTPError, hx:
                 log("Failed a second time for " + self.name)
                 log("Killing of Thread...  :(")
