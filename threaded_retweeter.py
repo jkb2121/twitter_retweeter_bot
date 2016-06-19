@@ -44,6 +44,10 @@ CONSUMER_SECRET = yml['twitter_account']['CONSUMER_SECRET']
 # print ""
 # print str(yml)
 
+
+def getStream(oauth):
+    return TwitterStream(auth=oauth)
+
 # Configure the connections to Twitter with Python_twitter and Python_tweepy.
 oauth = OAuth(ACCESS_TOKEN, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
 
@@ -51,7 +55,9 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
 
 # Initiate the connection to Twitter Streaming API
-twitter_stream = TwitterStream(auth=oauth)
+twitter_stream = getStream(oauth)
+
+
 tw_api = tweepy.API(auth)
 
 blacklist = []
@@ -90,6 +96,7 @@ try:
             # print "-" + stream + "\n\r"
 
         ts = TwitterStreamListener(name, stream, twitter_stream, tw_api, livetweet)
+        ts.setOauth(oauth)
 
         k = []
         try:

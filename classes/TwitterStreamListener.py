@@ -1,6 +1,7 @@
 import datetime
 import tweepy
 
+from twitter import TwitterStream
 from twitter.stream import TwitterHTTPError, Timeout, HeartbeatTimeout, Hangup
 
 try:
@@ -41,6 +42,9 @@ class TwitterStreamListener:
 
     def addBlacklist(self, blacklist):
         self.blacklist = blacklist
+
+    def setOauth(self, oauth):
+        self.oauth = oauth
 
     def setCounter(self, counter):
         self.counter = counter
@@ -94,6 +98,20 @@ class TwitterStreamListener:
                 tweet_detail = "Heartbeat Timeout"
             elif tweet is Hangup:
                 tweet_detail = "Hangup"
+                log("(" + str(tweet_count) + "): Detected Hangup...")
+                log("(" + str(tweet_count) +
+                    "): Attempting to reconnect to TwitterStream...\n\r")
+                self.twitter_stream = TwitterStream(auth=self.oauth)
+                try:
+                    iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en", replies="all")
+                except TwitterHTTPError, hx:
+                    log("Caught TwitterHTTPError for " + self.name)
+                    log("The specific error is: " + str(hx))
+
+                log("(" + str(tweet_count) +
+                    "): Successfully reconnected TwitterStream...\n\r")
+
+                tweet_detail = "Hangup Recovery"
 
             if tweet_detail:
                 log("(" + str(tweet_count) +
