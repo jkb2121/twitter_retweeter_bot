@@ -112,6 +112,7 @@ class TwitterStreamListener:
                     "): Successfully reconnected TwitterStream...\n\r")
 
                 tweet_detail = "Hangup Recovery"
+                continue
 
             if tweet_detail:
                 log("(" + str(tweet_count) +
