@@ -135,6 +135,7 @@ try:
             k.append(str(yml['watcher'][str(st)]['keywords'][keywords]))
 
         tw1 = TweepyWatcher(name, tw_api, livetweet)
+        tw1.setCounter(counter)
         tw1.setWatchlist(w)
         tw1.setFilter(k)
         tw1.setWatchDelay(watchdelay)
