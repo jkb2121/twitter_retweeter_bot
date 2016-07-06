@@ -1,4 +1,5 @@
 import datetime
+import time
 import tweepy
 
 from twitter import TwitterStream
@@ -101,8 +102,10 @@ class TwitterStreamListener:
                 log("(" + str(tweet_count) + "): Detected Hangup...")
                 log("(" + str(tweet_count) +
                     "): Attempting to reconnect to TwitterStream...\n\r")
+                time.sleep(300)
                 self.twitter_stream = TwitterStream(auth=self.oauth)
                 try:
+                    time.sleep(300)
                     iterator = self.twitter_stream.statuses.filter(track=str(self.track), language="en", replies="all")
                 except TwitterHTTPError, hx:
                     log("Caught TwitterHTTPError for " + self.name)
