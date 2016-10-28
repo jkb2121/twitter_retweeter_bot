@@ -153,7 +153,7 @@ class TwitterStreamListener:
                         # log("Testing to see if '" + entry + "' is in tweet '" + tweet[
                         # 'text'].lower() + "', and if so, retweeting...")
                         if entry in tweettext.lower():
-                            log("Found keyword, retweeting: '" + tweettext + "'")
+                            log("Found keyword, retweeting: [id:"+str(tweet['id'])+" '" + tweettext + "'")
                             if self.live:
                                 self.tw_api.retweet(tweet['id'])
                             tweeted = 1

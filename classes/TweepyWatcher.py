@@ -70,7 +70,7 @@ class TweepyWatcher:
 
                             for filter in self.filterlist:
                                 if filter in status.text.lower():
-                                    log("Retweeting [" + str(runcount) + "] (" + str(t) + "): " + str(tweettext))
+                                    log("Retweeting [" + str(runcount) + "][id:"+str(status.id)+"] (" + str(t) + "): " + str(tweettext))
 
                                     if self.live:
                                         self.api.retweet(status.id)
