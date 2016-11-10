@@ -8,13 +8,12 @@ import tweepy
 import yaml
 from twitter import OAuth, TwitterStream
 
+from classes.RetweetDB import RetweetDB
 from classes.TweepyWatcher import TweepyWatcher
 from classes.TwitterStreamListener import TwitterStreamListener
 
 # TODO Set up Logging
 # TODO Perpetual Mode
-
-
 
 if len(sys.argv) != 2:
     print "Usage threaded_retweeter.py <config>.yaml"
@@ -43,6 +42,21 @@ CONSUMER_SECRET = yml['twitter_account']['CONSUMER_SECRET']
 # print "Consumer Secret: " + CONSUMER_SECRET
 # print ""
 # print str(yml)
+
+rtdb = RetweetDB(
+    yml['retweetdb']['odbc_driver'],
+    yml['retweetdb']['hostname'],
+    yml['retweetdb']['port'],
+    yml['retweetdb']['database'],
+    yml['retweetdb']['username'],
+    yml['retweetdb']['password'],
+    yml['retweetdb']['context']
+)
+
+if rtdb.is_tweet_logged("777777444444444444444444447"):
+    print "This tweet is logged!"
+else:
+    print "This tweet is not logged!"
 
 
 def getStream(oauth):
@@ -95,7 +109,7 @@ try:
             delim = ','
             # print "-" + stream + "\n\r"
 
-        ts = TwitterStreamListener(name, stream, twitter_stream, tw_api, livetweet)
+        ts = TwitterStreamListener(name, stream, twitter_stream, tw_api, livetweet, rtdb)
         ts.setOauth(oauth)
 
         k = []
@@ -134,7 +148,7 @@ try:
             # print "Keyword: " + yml['watcher'][str(st)]['keywords'][keywords]
             k.append(str(yml['watcher'][str(st)]['keywords'][keywords]))
 
-        tw1 = TweepyWatcher(name, tw_api, livetweet)
+        tw1 = TweepyWatcher(name, tw_api, livetweet, rtdb)
         tw1.setCounter(counter)
         tw1.setWatchlist(w)
         tw1.setFilter(k)

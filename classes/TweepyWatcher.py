@@ -15,7 +15,7 @@ def log(entry, line=0):
 
 
 class TweepyWatcher:
-    def __init__(self, name, api, live):
+    def __init__(self, name, api, live, rtdb):
         self.name = name
         self.watchlist = []
         self.filterlist = []
@@ -24,6 +24,7 @@ class TweepyWatcher:
         self.counter = 10
         self.watchdelay = 15
         self.blacklist = []
+        self.rtdb = rtdb
 
     def setCounter(self, counter):
         self.counter = counter
@@ -70,10 +71,18 @@ class TweepyWatcher:
 
                             for filter in self.filterlist:
                                 if filter in status.text.lower():
-                                    log("Retweeting [" + str(runcount) + "][id:"+str(status.id)+"] (" + str(t) + "): " + str(tweettext))
 
-                                    if self.live:
-                                        self.api.retweet(status.id)
+                                    # if this tweet hasn't been logged yet, let's try to retweet it:
+                                    if not self.rtdb.is_tweet_logged(status.id):
+
+                                        log("Retweeting [" + str(runcount) + "][id:" + str(status.id) + "] (" + str(
+                                            t) + "): " + str(tweettext))
+
+                                        if self.live:
+                                            self.rtdb.log_tweet(status.id, "TweepyWatcher")
+                                            self.api.retweet(status.id)
+
+                                            # self.api.retweet(status.id)
                             t += 1
                             if t > self.counter:
                                 break
