@@ -7,7 +7,6 @@ from classes import RetweetDB
 
 class test_RetweetDB(unittest.TestCase):
     def setUp(self):
-        print "Setup"
 
         # Specify the file with your DB connection.
         filename = "../jkbbotfactory.yaml"
@@ -30,7 +29,6 @@ class test_RetweetDB(unittest.TestCase):
         )
 
     def tearDown(self):
-        print "Teardown"
         self.rtdb.close()
 
     def test_pass(self):
