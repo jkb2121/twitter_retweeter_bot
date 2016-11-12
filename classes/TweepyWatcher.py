@@ -79,7 +79,7 @@ class TweepyWatcher:
                                             t) + "): " + str(tweettext))
 
                                         if self.live:
-                                            self.rtdb.log_tweet(status.id, "TweepyWatcher")
+                                            self.rtdb.log_tweet(status.id, "TweepyWatcher", target)
                                             self.api.retweet(status.id)
 
                                             # self.api.retweet(status.id)

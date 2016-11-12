@@ -151,7 +151,8 @@ class TwitterStreamListener:
                         log("Retweet (" + str(tweet_count) + "): This retweet is already recorded, continuing!")
                         continue
                     else:
-                        self.rtdb.log_tweet(tweet['retweeted_status']['id'], "StreamListener-Retweet")
+                        self.rtdb.log_tweet(tweet['retweeted_status']['id'], "StreamListener-Retweet",
+                                            tweet['retweeted_status']['user']['screen_name'])
 
             except KeyError, k:
                 log("No Retweet Status")
@@ -169,7 +170,7 @@ class TwitterStreamListener:
                                 log("Found keyword, retweeting: [id:" + str(tweet['id']) + " '" + tweettext + "'")
 
                                 if self.live:
-                                    self.rtdb.log_tweet(tweet['id'], "StreamListener")
+                                    self.rtdb.log_tweet(tweet['id'], "StreamListener", tweet['user']['screen_name'])
                                     self.tw_api.retweet(tweet['id'])
 
                             tweeted = 1
@@ -184,7 +185,7 @@ class TwitterStreamListener:
                             tweet_count) + ") <" + self.track + "> : Retweeting: " + str(
                             tweet['user']['screen_name']) + ": " + tweettext + str("\n\r"))
                         if self.live:
-                            self.rtdb.log_tweet(tweet['id'], "StreamListener")
+                            self.rtdb.log_tweet(tweet['id'], "StreamListener", tweet['user']['screen_name'])
                             self.tw_api.retweet(tweet['id'])
 
             except tweepy.error.TweepError, e:

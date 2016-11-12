@@ -21,12 +21,12 @@ class RetweetDB:
 
         self.conn = pyodbc.connect(self.retweeter_dsn)
 
-    def log_tweet(self, twitter_id, source):
+    def log_tweet(self, twitter_id, source, tweeter=''):
         cursor = self.conn.cursor()
 
         if not self.is_tweet_logged(twitter_id):
-            sql = "INSERT INTO retweeter_bot.tweets (twitter_id, context, source) VALUES (?, ?, ?)"
-            cursor.execute(sql, twitter_id, self.context, source)
+            sql = "INSERT INTO retweeter_bot.tweets (twitter_id, context, source, tweeter) VALUES (?, ?, ?, ?)"
+            cursor.execute(sql, twitter_id, self.context, source, tweeter)
             cursor.commit()
 
     def is_tweet_logged(self, twitter_id):
