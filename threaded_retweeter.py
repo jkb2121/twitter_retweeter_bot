@@ -53,11 +53,6 @@ rtdb = RetweetDB(
     yml['retweetdb']['context']
 )
 
-if rtdb.is_tweet_logged("777777444444444444444444447"):
-    print "This tweet is logged!"
-else:
-    print "This tweet is not logged!"
-
 
 def getStream(oauth):
     return TwitterStream(auth=oauth)

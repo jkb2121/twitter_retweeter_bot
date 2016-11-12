@@ -55,3 +55,13 @@ class RetweetDB:
         else:
             # print "This was retweeted on {}".format(row[0])
             return True
+
+    def delete_tweet(self, twitter_id):
+        cursor = self.conn.cursor()
+        if self.is_tweet_logged(twitter_id):
+            sql = "DELETE FROM retweeter_bot.tweets WHERE twitter_id = ? AND context = ?"
+            cursor.execute(sql, twitter_id, self.context)
+            cursor.commit()
+
+    def close(self):
+        self.conn.close()
