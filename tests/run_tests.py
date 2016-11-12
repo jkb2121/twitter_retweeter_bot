@@ -7,5 +7,5 @@ from test_RetweetDB import test_RetweetDB
 suite = unittest.makeSuite(test_RetweetDB, 'test')
 
 # Manually Run the Unit Test Runner
-runner = unittest.TextTestRunner()
+runner = unittest.TextTestRunner(verbosity=2)
 runner.run(suite)
