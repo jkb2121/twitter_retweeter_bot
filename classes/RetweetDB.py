@@ -22,6 +22,10 @@ class RetweetDB:
         self.conn = pyodbc.connect(self.retweeter_dsn)
 
     def log_tweet(self, twitter_id, source, tweeter=''):
+
+        if tweeter != '':
+            tweeter = '@' + tweeter
+
         cursor = self.conn.cursor()
 
         if not self.is_tweet_logged(twitter_id):
