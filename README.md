@@ -17,9 +17,14 @@ Things I've messed with so far for this project...
 * YAML
 * Pycharm
 * Git
+* pyunit tests
 
 Things I'm going to get to (in various states of completion/incompletion on my desktop)
 * Making the structure more "pythonic"
-* pyunit tests
 * Google Geoip API's
 * Maybe even a Facebook API or two
+
+
+Disclaimer:  Yeah, maybe this code kind of sucks and I was lazy and didn't really
+comment as much as I should have, and definitely didn't start with test-driven development
+and am learning about Git in real-time, so please pardon its ugliness. :)
