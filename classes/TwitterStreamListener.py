@@ -154,6 +154,11 @@ class TwitterStreamListener:
                         self.rtdb.log_tweet(tweet['retweeted_status']['id'], "StreamListener-Retweet",
                                             tweet['retweeted_status']['user']['screen_name'])
 
+                    if self.in_blacklist(tweet['retweeted_status']['user']['screen_name']):
+                        log("Blacklisted Person being Retweeted (" + tweet['user'][
+                            'screen_name'] + ") Tweet: " + tweettext)
+                        continue
+
             except KeyError, k:
                 log("No Retweet Status")
 
