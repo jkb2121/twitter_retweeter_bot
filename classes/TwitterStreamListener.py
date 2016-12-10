@@ -22,6 +22,17 @@ def log(entry, line=0):
     l.close()
 
 
+def debug_log(entry, tweet):
+    entry = entry.encode('ascii', errors='ignore')
+    l = open("retweetbot.debug.log", "a")
+    timestamp = datetime.datetime.now().time()
+    datestamp = datetime.datetime.now().date()
+    l.write("-----------------------------------------------------------\n\r")
+    l.write(str(datestamp) + " " + str(timestamp) + ": " + entry + "\n\r")
+    l.write(json.dumps(tweet, indent=4))
+    l.close()
+
+
 class TwitterStreamListener:
     def getStatus(self):
         return "TwitterListener '" + self.name + "' Tracking: " + self.track
@@ -127,10 +138,12 @@ class TwitterStreamListener:
 
             if self.in_blacklist(tweettext):
                 log("Blacklist mention by " + tweet['user']['screen_name'] + ": " + tweettext)
+                debug_log("Blacklisted Mention", tweet)
                 continue
 
             if self.in_blacklist(tweet['user']['screen_name']):
                 log("Blacklisted Person (" + tweet['user']['screen_name'] + ") Tweet: " + tweettext)
+                debug_log("Blacklisted Person", tweet)
                 continue
 
             log("Identified Tweet " + self.name + " - (" + str(
@@ -157,6 +170,7 @@ class TwitterStreamListener:
                     if self.in_blacklist(tweet['retweeted_status']['user']['screen_name']):
                         log("Blacklisted Person being Retweeted (" + tweet['user'][
                             'screen_name'] + ") Tweet: " + tweettext)
+                        debug_log("Blacklisted Retweet", tweet)
                         continue
 
             except KeyError, k:
@@ -182,6 +196,7 @@ class TwitterStreamListener:
                             break;
                     if tweeted == 0:
                         log("Ignored tweet '" + tweettext + "'")
+                        debug_log("Ignored Tweet", tweet)
                 else:
 
                     if not self.rtdb.is_tweet_logged(tweet['id']):
@@ -189,6 +204,7 @@ class TwitterStreamListener:
                         log("Unrestricted Tweet " + self.name + " - (" + str(
                             tweet_count) + ") <" + self.track + "> : Retweeting: " + str(
                             tweet['user']['screen_name']) + ": " + tweettext + str("\n\r"))
+                        debug_log("Live Retweet", tweet)
                         if self.live:
                             self.rtdb.log_tweet(tweet['id'], "StreamListener", tweet['user']['screen_name'])
                             self.tw_api.retweet(tweet['id'])

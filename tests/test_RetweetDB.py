@@ -49,3 +49,14 @@ class test_RetweetDB(unittest.TestCase):
         self.rtdb.log_tweet('4444444777777444444444', 'UnitTest', 'PyUnit')
         self.assertEquals(self.rtdb.is_tweet_logged('4444444777777444444444'), True)
         self.rtdb.delete_tweet('4444444777777444444444')
+
+    def test_deleteTweet(self):
+        """ Verify that Deleting Tweets Works """
+
+        self.assertEquals(self.rtdb.is_tweet_logged('4444444777777444444444'), False)
+
+        self.rtdb.log_tweet('4444444777777444444444', 'UnitTest', 'PyUnit')
+        self.assertEquals(self.rtdb.is_tweet_logged('4444444777777444444444'), True)
+
+        self.rtdb.delete_tweet('4444444777777444444444')
+        self.assertEquals(self.rtdb.is_tweet_logged('4444444777777444444444'), False)
