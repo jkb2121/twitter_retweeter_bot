@@ -104,11 +104,11 @@ class TwitterStreamListener:
 
             tweet_detail = 0
             if tweet is None:
-                tweet_detail = "'None' reply"
+                tweet_detail = "'None' reply ( assuming Hangup )"
             elif tweet is Timeout:
-                tweet_detail = "Timeout"
+                tweet_detail = "Timeout ( assuming Hangup )"
             elif tweet is HeartbeatTimeout:
-                tweet_detail = "Heartbeat Timeout"
+                tweet_detail = "Heartbeat Timeout ( assuming Hangup )"
             elif tweet is Hangup:
                 tweet_detail = "Hangup"
                 log("(" + str(tweet_count) + "): Detected Hangup...")
