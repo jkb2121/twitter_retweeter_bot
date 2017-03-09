@@ -47,7 +47,7 @@ class TwitterStreamListener:
         self.filterarray = []
         self.blacklist = []
         self.live = live
-        self.counter = 151
+        self.counter = 5000
         self.rtdb = rtdb
 
         # Initiate the connection to Twitter Streaming API
@@ -100,7 +100,7 @@ class TwitterStreamListener:
 
         tweet_count = self.counter
         for tweet in iterator:
-            tweet_count -= 1
+            tweet_count += 1
 
             tweet_detail = 0
             if tweet is None:
@@ -131,7 +131,7 @@ class TwitterStreamListener:
 
             if tweet_detail:
                 log("(" + str(tweet_count) +
-                    "): Ignoring Case: " + tweet_detail + "\n\r")
+                    "): " + self.name + " Ignoring Case: " + tweet_detail + "\n\r")
 
             tweettext = tweet['text']
             tweettext = tweettext.encode('ascii', errors='ignore')
@@ -146,22 +146,23 @@ class TwitterStreamListener:
                 debug_log("Blacklisted Person", tweet)
                 continue
 
-            log("Identified Tweet " + self.name + " - (" + str(
+            log(self.name + ": Identified Tweet " + self.name + " - (" + str(
                 tweet_count) + "): Retweeting: " + str(
                 tweet['user']['screen_name']) + ": " + tweettext + str("\n\r"))
 
             try:
                 if tweet['retweeted_status']:
-                    log("Retweet (" + str(tweet_count) + "):by: Screen Name: " +
+                    log(self.name + ": Retweet (" + str(tweet_count) + "):by: Screen Name: " +
                         tweet['retweeted_status']['user']['screen_name'])
-                    log("Retweet (" + str(tweet_count) + "):by: Name: " +
+                    log(self.name + ": Retweet (" + str(tweet_count) + "):by: Name: " +
                         tweet['retweeted_status']['user']['name'])
-                    log("Retweet (" + str(tweet_count) + "):by: ID: " +
+                    log(self.name + ": Retweet (" + str(tweet_count) + "):by: ID: " +
                         str(tweet['retweeted_status']['id']))
                     # log("Retweet Details: {}".format(tweet['retweeted_status']))
 
                     if self.rtdb.is_tweet_logged(tweet['retweeted_status']['id']):
-                        log("Retweet (" + str(tweet_count) + "): This retweet is already recorded, continuing!")
+                        log(self.name + ": Retweet (" + str(
+                            tweet_count) + "): This retweet is already recorded, continuing!")
                         continue
                     else:
                         self.rtdb.log_tweet(tweet['retweeted_status']['id'], "StreamListener-Retweet",
@@ -186,7 +187,8 @@ class TwitterStreamListener:
                         if entry in tweettext.lower():
 
                             if not self.rtdb.is_tweet_logged(tweet['id']):
-                                log("Found keyword, retweeting: [id:" + str(tweet['id']) + " '" + tweettext + "'")
+                                log(self.name + ": Found keyword, retweeting: [id:" + str(
+                                    tweet['id']) + " '" + tweettext + "'")
 
                                 if self.live:
                                     self.rtdb.log_tweet(tweet['id'], "StreamListener", tweet['user']['screen_name'])
@@ -195,7 +197,7 @@ class TwitterStreamListener:
                             tweeted = 1
                             break;
                     if tweeted == 0:
-                        log("Ignored tweet '" + tweettext + "'")
+                        log(self.name + ": Ignored tweet '" + tweettext + "'")
                         debug_log("Ignored Tweet", tweet)
                 else:
 
@@ -210,7 +212,7 @@ class TwitterStreamListener:
                             self.tw_api.retweet(tweet['id'])
 
             except tweepy.error.TweepError, e:
-                log("TweepError:  Just ignore it and move on with life...")
-                log("The specific error is: " + str(e))
-            if tweet_count <= 0:
+                log(self.name + ": TweepError:  Just ignore it and move on with life...")
+                log(self.name + ": The specific error is: " + str(e))
+            if tweet_count >= self.counter:
                 break
