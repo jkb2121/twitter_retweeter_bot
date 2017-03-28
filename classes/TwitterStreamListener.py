@@ -98,7 +98,7 @@ class TwitterStreamListener:
 
         # Read and parse the tweets we find...
 
-        tweet_count = self.counter
+        tweet_count = 0 
         for tweet in iterator:
             tweet_count += 1
 
@@ -137,12 +137,12 @@ class TwitterStreamListener:
             tweettext = tweettext.encode('ascii', errors='ignore')
 
             if self.in_blacklist(tweettext):
-                log("Blacklist mention by " + tweet['user']['screen_name'] + ": " + tweettext)
+                log(self.name + " (" + str(tweet_count) + ") Blacklist mention by " + tweet['user']['screen_name'] + ": " + tweettext)
                 debug_log("Blacklisted Mention", tweet)
                 continue
 
             if self.in_blacklist(tweet['user']['screen_name']):
-                log("Blacklisted Person (" + tweet['user']['screen_name'] + ") Tweet: " + tweettext)
+                log(self.name + " (" + str(tweet_count) +") Blacklisted Person (" + tweet['user']['screen_name'] + ") Tweet: " + tweettext)
                 debug_log("Blacklisted Person", tweet)
                 continue
 
