@@ -214,5 +214,7 @@ class TwitterStreamListener:
             except tweepy.error.TweepError, e:
                 log(self.name + ": TweepError:  Just ignore it and move on with life...")
                 log(self.name + ": The specific error is: " + str(e))
+
             if tweet_count >= self.counter:
+                log("Breaking: " + self.name + " - Tweet_count: " + str(tweet_count) + " >= Self.counter: " + str(self.counter))
                 break
