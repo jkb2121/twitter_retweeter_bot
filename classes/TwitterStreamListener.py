@@ -67,8 +67,12 @@ class TwitterStreamListener:
 
     def in_blacklist(self, dirty):
 
+	dirty = dirty.replace("@", "")
+
         for black in self.blacklist:
 
+            black = black.replace("@", "")
+ 
             if black.lower() in dirty.lower():
                 return True
 
