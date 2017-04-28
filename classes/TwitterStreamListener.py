@@ -111,7 +111,7 @@ class TwitterStreamListener:
                 tweet_detail = "Heartbeat Timeout ( assuming Hangup )"
             elif tweet is Hangup:
                 tweet_detail = "Hangup"
-                log("(" + str(tweet_count) + "): Detected Hangup...")
+                log("(" + str(tweet_count) + ") :" + self.name + " Detected Hangup...")
                 log("(" + str(tweet_count) +
                     "): Attempting to reconnect to TwitterStream...\n\r")
                 time.sleep(300)
