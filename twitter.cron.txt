@@ -1,0 +1,2 @@
+0,10,20,30,40,50 * * * * /home/jkb/code/twitter_retweeter_bot/hangup.sh > /home/jkb/code/twitter_retweeter_bot/excuses.log
+0 0 * * 1,4 /home/jkb/code/twitter_retweeter_bot/reboot.sh >> /home/jkb/code/twitter_retweeter_bot/excuses.log
